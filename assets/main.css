@@ -18,7 +18,7 @@ main {
 }
 
 input {
-    background-color: red;
+    background-color: lavender;
     grid-column-start: 1;
     grid-column-end: 5;
     grid-row-start: 1;
@@ -31,14 +31,7 @@ button {
 
 .tall {
     grid-column-start: 4;
-    grid-row-start: 5;
-    grid-row-end: 7;
-    border-radius: 10%;
-}
-
-.wide {
-    grid-column-start: 3;
-    grid-row-start: 7;
-    grid-column-end: 5;
+    grid-row-start: 6;
+    grid-row-end: 8;
     border-radius: 10%;
 }
