@@ -5,10 +5,10 @@
 
 let entries = [];
 let workingNumber = '';
-let total = 0;
 
 // Function to update the display
-
+// TODO make sure displayed number isn't longer than the display and rounds for display only.
+// TODO make sure displayed number only shows to 4DP.
 function updateDisplay() {
     if (workingNumber === '') {
         document.getElementById('answer').value = 0;     
@@ -17,17 +17,47 @@ function updateDisplay() {
         document.getElementById('answer').value = workingNumber;
     }
 }
-// Function to identify a symbol
-function isSymbol(value) {
-    return (value === '+' || value === '-' || value === '*' || value === '/');
-}
 
 // set initial display
 
 updateDisplay();
 
+// Function to identify a symbol
+function isSymbol(value) {
+    return (value === '+' || value === '-' || value === '*' || value === '/');
+}
+
+// Create a function to calculate
+function calculate(array) {
+    // The calculate function is passed the array, which has a set of strings in it.
+    // We need to start by taking the first string in the array and making it a number, and assign it to a variable runningTotal.
+    let runningTotal = Number(array[0]);
+    // Then, we need to loop through the array, starting at position 1, which is first operator, and going until length of the array.
+    for (i = 1; i < array.length; i++) {
+    // we need to assign i to a variable called operator. This is still a string.
+    // we need to assign i+1 to a variable called nextNumber, and also change the strings to a number using the built in Number function.
+        let symbol = array[i];
+        let nextNumber = Number(array[i+1]);
+        // we then need to look at the operator variable. If it is a +, we need to take runningTotal and assign it as runningTotal + nextNumber.
+        if (symbol === '+'){
+            runningTotal += nextNumber;
+        }
+        else if (symbol === '-'){
+            runningTotal -= nextNumber;
+        }
+        else if (symbol === '*'){
+            runningTotal *= nextNumber;
+        }
+        else if (symbol === '/'){
+            runningTotal /= nextNumber;
+        }
+        i++
+    } 
+    return runningTotal;
+}
+
 // Create a function that takes the element return by event handler and and assigns the value to a variable.
-function calculate() {
+function handleEntries() {
     let value = this.value;
     console.log('value is ' + value);
     // Handle clearing temp or all values.
@@ -91,12 +121,22 @@ function calculate() {
         entries.push(value);
         workingNumber = '';
         updateDisplay();
-    }   
-    // if equals, run calculate function.
-    // add result to workingNum
-    // update display (which will show working num)
-    // clear the entries array.
-
+    } 
+    // if equals, 
+    else if(value === '='){
+        // push the last number in workingNum to array if there is something there.
+        if (workingNumber != '' && workingNumber != '-'){
+            entries.push(workingNumber);
+        }
+        // if nothing there, remove last symbol.
+        else if (workingNumber === '' || workingNumber === '-'){
+            entries.pop();
+        }
+        // once that is done, set working number to result of calculate
+        workingNumber = calculate(entries);
+        entries = [];
+        updateDisplay();
+    }
     //log the numbers to see where we're at.
     console.log('workingNumber is ' + workingNumber);
     console.log('entries is ' + entries);
@@ -109,7 +149,7 @@ let buttons = document.getElementsByTagName("button");
 // Add an event listener to the buttons for a click that runs a function called 'calculate'
 
 for (i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener('click', calculate);
+    buttons[i].addEventListener('click', handleEntries);
 }
 
 
@@ -120,21 +160,9 @@ for (i = 0; i < buttons.length; i++) {
 
 
 
-// When we hit an equals, we take the last number in temp, push it to the array, and then need to execute the calculate function.
-// The calculate function is passed the array, which has a set of strings in it.
-    // We need to start by taking the first string in the array and making it a number, and assign it to a variable runningTotal.
-    // Then, we need to loop through the array, starting at position 1, which is first operator, and going until length of the array.
-    // we need to assign i to a variable called operator. This is still a string.
-    // we need to assign i+1 to a variable called nextNumber, and also change the strings to a number using the built in Number function.
-    // we then need to look at the operator variable. If it is a +, we need to take runningTotal and assign it as runningTotal + nextNumber.
-    // Else if it is a -, we need to take runningTotal and assign it as runningTotal - nextNumber.
-    // Else if it is a *, we need to take runningTotal and assign it as runningTotal * nextNumber.
-    // Else if it is a /, we need to take runningTotal and assign it as runningTotal / nextNumber.
-    // Then we need to increment i.
-    // When this finishes, we need to put the runningTotal in the display, and update the workingNumber to the runningTotal, so that if they hit an operator button, it will be added to array. We then need to clear the runningTotal and the array so they're ready for new input.
+
     // The result must be able to be displayed up to 4 DP.
 
-// we may need something to handle negative numbers?? I don't entirely know how they'll work yet so just noting this down so that I can address it once I've tested it with some negatives.
 
 // Extension: take keyboard inputs.
 // Extension: handle %. When we hit a % operator, we take the temp number, add it to the array, followed by '* 100 /'. We then clear the display.
