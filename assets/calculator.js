@@ -14,7 +14,25 @@ function updateDisplay() {
         document.getElementById('answer').value = 0;     
     }
     else if (workingNumber != '') {
-        document.getElementById('answer').value = workingNumber;
+        if (typeof workingNumber === 'string') {
+            document.getElementById('answer').value = workingNumber;     
+        } else {
+            let num = Number(workingNumber);
+            if ((!Number.isInteger(num)) && (num < 1000000)) {
+            num = num.toFixed(4).replace(/0+$/, "");
+            } else if (!Number.isInteger(num) && num >= 1000000 && num < 10000000) {
+            num = num.toFixed(3).replace(/0+$/, "");
+            } else if (!Number.isInteger(num) && num >= 10000000 && num < 100000000) {
+            num = num.toFixed(2).replace(/0+$/, "");
+            } else if (!Number.isInteger(num) && num >= 100000000 && num < 1000000000) {
+            num = num.toFixed(1).replace(/0+$/, "");
+            } else if (Number.isInteger(num) && (num < 1000000000)) {
+                num = num;
+            } else {
+              num = num.toPrecision(10);
+            }
+        document.getElementById('answer').value = num;
+        }
     }
 }
 
@@ -72,6 +90,10 @@ function handleEntries() {
         entries = [];
         total = 0;
         updateDisplay();
+    }
+    // Handle equals when array empty.
+    else if (value === '=' && entries.length === 0 && (workingNumber === '' || workingNumber === '-')) {
+        return;
     }
     // First, let's deal with negative and positive indications.
     // if we hit a negative while there is no working number, we are going to treat following number as a negative number 
@@ -146,8 +168,8 @@ function handleEntries() {
 
 // Get all the buttons.
 let buttons = document.getElementsByTagName("button");
-// Add an event listener to the buttons for a click that runs a function called 'calculate'
 
+// Add an event listener to the buttons for a click that runs a function called 'calculate'
 for (i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener('click', handleEntries);
 }
@@ -155,13 +177,6 @@ for (i = 0; i < buttons.length; i++) {
 
 
 
-
-
-
-
-
-
-    // The result must be able to be displayed up to 4 DP.
 
 
 // Extension: take keyboard inputs.
